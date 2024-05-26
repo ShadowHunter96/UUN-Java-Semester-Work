@@ -33,9 +33,30 @@ public class SubjectDao {
         this.subjectRepository = subjectRepository;
     }
 
+    public List<SubjectDto> findSubjects(SubjectFilterDto subjectFilterDto) {
+        List<SubjectEntity> subjectEntities = subjectRepository.findAll(getSubjectSpecification(subjectFilterDto),
+                Sort.by(subjectFilterDto.getOrderList()));
+        return ConvertEntities.fromEntities(subjectEntities, SubjectFactory::fromEntity);
+    }
+
+    private Specification<SubjectEntity> getSubjectSpecification(SubjectFilterDto filter) {
+        return (Root<SubjectEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) ->
+                criteriaBuilder.and(getSubjectPredicateList(filter, root, criteriaBuilder).toArray(new Predicate[0]));
+    }
+
+    private List<Predicate> getSubjectPredicateList(
+            SubjectFilterDto filter, Root<SubjectEntity> root, CriteriaBuilder criteriaBuilder) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.getDescription() != null && !filter.getDescription().isEmpty()){
+            String likePattern = "%" + filter.getDescription() + "%";
+            predicates.add(criteriaBuilder.like(root.get("description"), likePattern));
+        }
+        return predicates;
+    }
 
     public Page<SubjectDto> findSubjectPage(SubjectFilterDto subjectFilterDto) {
-        Page<SubjectEntity> userEntityPage = subjectRepository.findAll(getUserSpecification(subjectFilterDto),
+        Page<SubjectEntity> userEntityPage = subjectRepository.findAll(getSubjectSpecification(subjectFilterDto),
                 PageRequest.of(subjectFilterDto.getPage(), subjectFilterDto.getSize(),
                         Sort.by(subjectFilterDto.getOrderList())));
         List<SubjectDto> supplierDtoList = ConvertEntities
@@ -44,27 +65,8 @@ public class SubjectDao {
                 subjectFilterDto.getSize(), Sort.by(subjectFilterDto.getOrderList())),
                 userEntityPage.getTotalElements());
     }
-
-
-    private Specification<SubjectEntity> getSubjectSpecification(SubjectFilterDto filter) {
-        return (Root<SubjectEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) ->
-                criteriaBuilder.and(getSubjectPredicateList(filter, root, criteriaBuilder).toArray(new Predicate[0]));
-    }private Specification<SubjectEntity> getUserSpecification(SubjectFilterDto filter) {
-        return (Root<SubjectEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) ->
-                criteriaBuilder.and(getSubjectPredicateList(filter, root, criteriaBuilder).toArray(new Predicate[0]));
-    }
-
-    private List<Predicate> getSubjectPredicateList(
-            SubjectFilterDto filter, Root<SubjectEntity> root, CriteriaBuilder criteriaBuilder
-    ) {
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(criteriaBuilder.equal(root.get("deleted"), filter.isDeleted()));
-
-
-
-        return predicates;
-    }
 }
+
 
 
 

@@ -2,8 +2,11 @@ package com.example.SubjectApi2.servise;
 
 import com.example.SubjectApi2.factory.SubjectFactory;
 import com.example.SubjectApi2.repository.SubjectRepository;
+import com.example.SubjectApi2.subject.SubjectDao;
 import com.example.SubjectApi2.subject.SubjectDto;
 import com.example.SubjectApi2.subject.SubjectEntity;
+import com.example.SubjectApi2.subject.SubjectFilterDto;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,14 +18,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 @Service
 public class SubjectService {
 
-    @Autowired
     private SubjectRepository subjectRepository;
-
-    @Autowired
+    private SubjectDao subjectDao;
     private AresService aresService;
+
+    public SubjectService(SubjectRepository subjectRepository, SubjectDao subjectDao, AresService aresService) {
+        this.subjectRepository = subjectRepository;
+        this.subjectDao = subjectDao;
+        this.aresService = aresService;
+    }
 
     public ResponseEntity<?> addSubjectByIco(String ico, String acronym, String description) {
 
@@ -73,6 +82,16 @@ public class SubjectService {
                 .map(entity -> ResponseEntity.ok(SubjectFactory.fromEntity(entity)))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    public Page<SubjectDto> findSubjectPageDto(SubjectFilterDto subjectFilterDto){
+        return subjectDao.findSubjectPage(subjectFilterDto);
+    }
+
+    public List<SubjectDto> findSubjects(SubjectFilterDto subjectFilterDto) {
+        return subjectDao.findSubjects(subjectFilterDto);
+    }
+
+
 
 
 
