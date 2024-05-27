@@ -17,7 +17,8 @@ public class SubjectFilterDto {
     private String obchodniJmeno;
     private String description;
     private String acronym;
-    private boolean deleted;
+    private String ico;
+    private Boolean deleted;
 
 
     private int page;

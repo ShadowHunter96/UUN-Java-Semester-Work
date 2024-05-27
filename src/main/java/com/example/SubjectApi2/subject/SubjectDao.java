@@ -52,6 +52,15 @@ public class SubjectDao {
             String likePattern = "%" + filter.getDescription() + "%";
             predicates.add(criteriaBuilder.like(root.get("description"), likePattern));
         }
+
+        if (filter.getDeleted() != null) {
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), filter.getDeleted()));
+        }
+
+        if (filter.getIco() != null && !filter.getIco().isEmpty()){
+            String likePattern = "%" + filter.getIco() + "%";
+            predicates.add(criteriaBuilder.like(root.get("ico"), likePattern));
+        }
         return predicates;
     }
 

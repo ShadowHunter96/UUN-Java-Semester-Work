@@ -65,13 +65,15 @@ public class SubjectController {
 
     @GetMapping("/search2")
     public ResponseEntity<List<SubjectDto>> findSubjects(
-            @RequestParam(required = false, defaultValue = "false") boolean deleted,
+            @RequestParam(required = false) Boolean deleted,
             @RequestParam String description,
+            @RequestParam String ico,
             @RequestParam(required = false, defaultValue = "id") String sortBy) {
 
         SubjectFilterDto filter = new SubjectFilterDto();
         filter.setDeleted(deleted);
         filter.setDescription(description);
+        filter.setIco(ico);
 
         List<Sort.Order> orders = Collections.singletonList(Sort.Order.by(sortBy));
         filter.setOrderList(orders);
