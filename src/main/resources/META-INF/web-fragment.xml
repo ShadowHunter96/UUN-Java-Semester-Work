@@ -1,0 +1,31 @@
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+              version="3.0">
+    <name>ExampleFragment</name>
+
+    <!-- Define your servlets here -->
+    <servlet>
+        <servlet-name>exampleServlet</servlet-name>
+        <servlet-class>com.example.SubjectApi2.servlet.ExampleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exampleServlet</servlet-name>
+        <url-pattern>/example</url-pattern>
+    </servlet-mapping>
+
+    <!-- Define your filters here -->
+    <filter>
+        <filter-name>exampleFilter</filter-name>
+        <filter-class>com.example.SubjectApi2.servlet.ExampleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>exampleFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Define your listeners here -->
+    <listener>
+        <listener-class>com.example.SubjectApi2.servlet.ExampleListener</listener-class>
+    </listener>
+</web-fragment>
